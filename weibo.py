@@ -98,29 +98,37 @@ def getFid(UserId):
     return fid
 
 def getUser(UserId):
-    while True:
+    try:
         for id in UserId:
-            try:
-                id = id.strip('\n')
-                fid = getFid(id)
-                containerid = getContainerid(fid,id)
-                response = getContent(id,containerid)
-                content = response[0] #发布的微博内容
-                source = response[1] #发布的微博URL地址
-                dingdingTime = str(getTime())[0:-13] #境外服务器时间协调后的当前时间
-                if saveContent(id,source):
-                    print("#微博监控\ntime: {}\ncontent: {}\naddress: {}".format(dingdingTime,content,source))
-                    dingdingsend("#微博监控\ntime: {}\ncontent: {}\naddress: {}".format(dingdingTime,content,source))
-                else:
-                    print("#微博监控\ntime: {}\ncontent: {}\naddress: {}".format(dingdingTime,content,source))
-            except Exception as e:
-                print(e)
-                bark = 'https://api.day.app/BfGpbdX6ZRMUJDnWuxxxx/斯文爸爸，您的微博监控程序运行出错，请注意检查'
-                requests.get(bark,verify=False,timeout=20)
-
+            id = id.strip('\n')
+            fid = getFid(id)
+            containerid = getContainerid(fid,id)
+            response = getContent(id,containerid)
+            content = response[0] #发布的微博内容
+            source = response[1] #发布的微博URL地址
+            dingdingTime = str(getTime())[0:-13] #境外服务器时间协调后的当前时间
+            if saveContent(id,source):
+                # print("#微博监控\ntime: {}\ncontent: {}\naddress: {}".format(dingdingTime,content,source))
+                dingdingsend("#微博监控\ntime: {}\ncontent: {}\naddress: {}".format(dingdingTime,content,source))
+            # else:
+                # print("#微博监控\ntime: {}\ncontent: {}\naddress: {}".format(dingdingTime,content,source))
             time.sleep(20)
+    except Exception as e:
+        print(e)
+        bark = 'https://api.day.app/BfGpbdX6ZRMUJDnWxxxxx/斯文爸爸，您的微博监控程序运行出错，请注意检查'
+        requests.get(bark,verify=False,timeout=20)
+
+def main():
+    while True:
+        try:
+            with open('weiboID.txt','r') as r:
+                getUser(r)
+        except Exception as e:
+            print(e)
+            bark = 'https://api.day.app/BfGpbdX6ZRMUJDnWxxxxx/斯文爸爸，您的微博监控程序运行出错，请注意检查'
+            requests.get(bark,verify=False,timeout=20)
         time.sleep(30)
 
 if __name__ == "__main__":
-    with open('weiboID.txt','r') as r:
-        getUser(r)
+    main()
+
